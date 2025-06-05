@@ -1,0 +1,98 @@
+[
+  {
+    "name": "SQL Injection",
+    "protocol": "TCP",
+    "port": 80,
+    "signature": "' OR 1=1",
+    "severity": "high",
+    "description": "SQL injection attempt trying to bypass authentication"
+  },
+  {
+    "name": "SQL Injection",
+    "protocol": "TCP",
+    "port": 80,
+    "signature": "UNION SELECT",
+    "severity": "high",
+    "description": "SQL injection attempt using UNION"
+  },
+  {
+    "name": "XSS Attack",
+    "protocol": "TCP",
+    "port": 80,
+    "signature": "<script>",
+    "severity": "medium",
+    "description": "Cross-site scripting attempt"
+  },
+  {
+    "name": "Command Injection",
+    "protocol": "TCP",
+    "port": 80,
+    "signature": "; cat /etc/passwd",
+    "severity": "high",
+    "description": "Command injection attempt to read passwd file"
+  },
+  {
+    "name": "Path Traversal",
+    "protocol": "TCP",
+    "port": 80,
+    "signature": "../../../",
+    "severity": "medium",
+    "description": "Directory traversal attempt"
+  },
+  {
+    "name": "SSH Brute Force",
+    "protocol": "TCP",
+    "port": 22,
+    "signature": "SSH-",
+    "severity": "medium",
+    "description": "SSH brute force attempt"
+  },
+  {
+    "name": "FTP Brute Force",
+    "protocol": "TCP",
+    "port": 21,
+    "signature": "USER",
+    "severity": "medium",
+    "description": "FTP brute force attempt"
+  },
+  {
+    "name": "NMAP Scan",
+    "protocol": "*",
+    "port": "*",
+    "signature": "Nmap",
+    "severity": "low",
+    "description": "Port scanning with Nmap"
+  },
+  {
+    "name": "HTTP Directory Scan",
+    "protocol": "TCP",
+    "port": 80,
+    "signature": "gobuster",
+    "severity": "low",
+    "description": "Web directory scanning"
+  },
+  {
+    "name": "HTTP Directory Scan",
+    "protocol": "TCP",
+    "port": 80,
+    "signature": "dirbuster",
+    "severity": "low",
+    "description": "Web directory scanning"
+  },
+  {
+    "name": "Log4j Exploitation",
+    "protocol": "TCP",
+    "port": "*",
+    "signature": "${jndi:ldap",
+    "severity": "critical",
+    "description": "Log4j vulnerability exploitation attempt"
+  },
+  {
+    "name": "ShellShock Attack",
+    "protocol": "TCP",
+    "port": 80,
+    "signature": "() {",
+    "severity": "high",
+    "description": "ShellShock vulnerability exploitation attempt"
+  }
+]

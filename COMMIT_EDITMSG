@@ -1,0 +1,7 @@
+Provide more details about potential attacks for better security monitoring
+
+Enhance alert messages in decoy_website.py to include detailed credentials and command injection details and add attached assets.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: 6d493d40-b1ad-464d-aa63-35bdc44f622e
+Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/da0d1d60-31b1-44cf-bcf5-0b72f85021bc/63555e0d-ee06-4ec6-b107-cdb434e00f71.jpg

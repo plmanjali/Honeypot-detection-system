@@ -1,0 +1,565 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings - Honeypot Detection System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h1><i class="fas fa-cog me-2"></i>Settings</h1>
+        <p class="text-muted">Configure system settings and attack patterns</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <!-- Settings Navigation Tabs -->
+        <div class="list-group mb-4">
+            <a href="#general-settings" class="list-group-item list-group-item-action active" data-bs-toggle="list">
+                <i class="fas fa-sliders-h me-2"></i>General Settings
+            </a>
+            <a href="#attack-patterns" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                <i class="fas fa-bug me-2"></i>Attack Patterns
+            </a>
+            <a href="#log-management" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                <i class="fas fa-clipboard-list me-2"></i>Log Management
+            </a>
+            <a href="#alerts-settings" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                <i class="fas fa-bell me-2"></i>Alerts Settings
+            </a>
+            <a href="#system-info" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                <i class="fas fa-info-circle me-2"></i>System Information
+            </a>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <!-- Settings Content -->
+        <div class="tab-content">
+            <!-- General Settings -->
+            <div class="tab-pane fade show active" id="general-settings">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-sliders-h me-1"></i>
+                        General Settings
+                    </div>
+                    <div class="card-body">
+                        <form id="general-settings-form">
+                            <div class="mb-3">
+                                <label for="system-name" class="form-label">System Name</label>
+                                <input type="text" class="form-control" id="system-name" value="Honeypot Detection System">
+                            </div>
+                            <div class="mb-3">
+                                <label for="honeypot-ips" class="form-label">Honeypot IP Addresses</label>
+                                <textarea class="form-control" id="honeypot-ips" rows="3">127.0.0.1</textarea>
+                                <div class="form-text">Enter one IP address per line</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="monitoring-interface" class="form-label">Network Interface</label>
+                                <select class="form-select" id="monitoring-interface">
+                                    <option value="lo">lo (Loopback)</option>
+                                    <option value="eth0">eth0</option>
+                                    <option value="wlan0">wlan0</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="enable-auto-reports" checked>
+                                <label class="form-check-label" for="enable-auto-reports">Enable Automatic Daily Reports</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Settings</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Attack Patterns -->
+            <div class="tab-pane fade" id="attack-patterns">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-bug me-1"></i>
+                            Attack Patterns
+                        </div>
+                        <button class="btn btn-sm btn-primary" id="add-pattern-btn">
+                            <i class="fas fa-plus me-1"></i> Add Pattern
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Protocol</th>
+                                        <th>Port</th>
+                                        <th>Signature</th>
+                                        <th>Severity</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attack-patterns-table">
+                                    <tr>
+                                        <td colspan="6" class="text-center">Loading attack patterns...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Log Management -->
+            <div class="tab-pane fade" id="log-management">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-clipboard-list me-1"></i>
+                        Log Management
+                    </div>
+                    <div class="card-body">
+                        <form id="log-management-form">
+                            <div class="mb-3">
+                                <label for="log-retention" class="form-label">Log Retention Period (Days)</label>
+                                <input type="number" class="form-control" id="log-retention" value="30" min="1" max="365">
+                            </div>
+                            <div class="mb-3">
+                                <label for="max-log-size" class="form-label">Maximum Log Size (MB)</label>
+                                <input type="number" class="form-control" id="max-log-size" value="100" min="10" max="1000">
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="enable-log-rotation" checked>
+                                <label class="form-check-label" for="enable-log-rotation">Enable Log Rotation</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Settings</button>
+                        </form>
+                        
+                        <hr>
+                        
+                        <h5>Maintenance</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-warning" id="clear-old-logs-btn">
+                                    <i class="fas fa-trash me-1"></i> Clear Old Logs
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-danger" id="reset-all-logs-btn">
+                                    <i class="fas fa-exclamation-triangle me-1"></i> Reset All Logs
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alerts Settings -->
+            <div class="tab-pane fade" id="alerts-settings">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-bell me-1"></i>
+                        Alerts Settings
+                    </div>
+                    <div class="card-body">
+                        <form id="alerts-settings-form">
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="enable-alerts" checked>
+                                <label class="form-check-label" for="enable-alerts">Enable Alert Generation</label>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Minimum Alert Severity</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="min-severity" id="severity-low" value="low" checked>
+                                    <label class="form-check-label" for="severity-low">
+                                        Low (All Alerts)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="min-severity" id="severity-medium" value="medium">
+                                    <label class="form-check-label" for="severity-medium">
+                                        Medium
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="min-severity" id="severity-high" value="high">
+                                    <label class="form-check-label" for="severity-high">
+                                        High
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="min-severity" id="severity-critical" value="critical">
+                                    <label class="form-check-label" for="severity-critical">
+                                        Critical Only
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <h5>Notifications</h5>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="enable-email-alerts">
+                                <label class="form-check-label" for="enable-email-alerts">Enable Email Notifications</label>
+                            </div>
+                            
+                            <div id="email-settings" style="display: none;">
+                                <div class="mb-3">
+                                    <label for="email-recipient" class="form-label">Email Recipient</label>
+                                    <input type="email" class="form-control" id="email-recipient" placeholder="admin@example.com">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email-severity" class="form-label">Email Notification Threshold</label>
+                                    <select class="form-select" id="email-severity">
+                                        <option value="low">All Alerts</option>
+                                        <option value="medium" selected>Medium or Higher</option>
+                                        <option value="high">High or Critical Only</option>
+                                        <option value="critical">Critical Only</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Save Settings</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- System Information -->
+            <div class="tab-pane fade" id="system-info">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-info-circle me-1"></i>
+                        System Information
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Honeypot Detection System</h5>
+                                <p>Version: 1.0.0</p>
+                                <p>Build Date: 2023-11-01</p>
+                                <p>License: MIT</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>System Resources</h5>
+                                <div class="mb-3">
+                                    <label class="form-label">CPU Usage</label>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Memory Usage</label>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40%</div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Disk Usage</label>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 70%;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">70%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <h5>Components</h5>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Component</th>
+                                        <th>Status</th>
+                                        <th>Version</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Network Monitor</td>
+                                        <td><span class="badge bg-success">Running</span></td>
+                                        <td>1.0.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pattern Analyzer</td>
+                                        <td><span class="badge bg-success">Running</span></td>
+                                        <td>1.0.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Alert System</td>
+                                        <td><span class="badge bg-success">Running</span></td>
+                                        <td>1.0.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Report Generator</td>
+                                        <td><span class="badge bg-success">Running</span></td>
+                                        <td>1.0.0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Attack Pattern Modal -->
+<div class="modal fade" id="addPatternModal" tabindex="-1" aria-labelledby="addPatternModalLabel" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPatternModalLabel">Add Attack Pattern</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-pattern-form">
+                    <div class="mb-3">
+                        <label for="pattern-name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="pattern-name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pattern-protocol" class="form-label">Protocol</label>
+                        <select class="form-select" id="pattern-protocol" required>
+                            <option value="TCP">TCP</option>
+                            <option value="UDP">UDP</option>
+                            <option value="ICMP">ICMP</option>
+                            <option value="*">Any</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pattern-port" class="form-label">Port</label>
+                        <input type="text" class="form-control" id="pattern-port" placeholder="80 or * for any">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pattern-signature" class="form-label">Signature Pattern</label>
+                        <textarea class="form-control" id="pattern-signature" rows="3" required></textarea>
+                        <div class="form-text">Text pattern to match in packet payloads</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pattern-severity" class="form-label">Severity</label>
+                        <select class="form-select" id="pattern-severity" required>
+                            <option value="critical">Critical</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pattern-description" class="form-label">Description</label>
+                        <textarea class="form-control" id="pattern-description" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="add-pattern-submit">Add Pattern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Action Modal -->
+<div class="modal fade" id="confirmActionModal" tabindex="-1" aria-labelledby="confirmActionModalLabel" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmActionModalLabel">Confirm Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="confirm-action-message">
+                Are you sure you want to perform this action?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm-action-btn">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle form submissions
+    document.getElementById('general-settings-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // In a real implementation, you would save these settings
+        alert('Settings saved successfully!');
+    });
+    
+    document.getElementById('log-management-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // In a real implementation, you would save these settings
+        alert('Log management settings saved successfully!');
+    });
+    
+    document.getElementById('alerts-settings-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // In a real implementation, you would save these settings
+        alert('Alert settings saved successfully!');
+    });
+    
+    // Show/hide email settings based on checkbox
+    document.getElementById('enable-email-alerts').addEventListener('change', function() {
+        const emailSettings = document.getElementById('email-settings');
+        emailSettings.style.display = this.checked ? 'block' : 'none';
+    });
+    
+    // Handle add attack pattern
+    document.getElementById('add-pattern-btn').addEventListener('click', function() {
+        const modal = new bootstrap.Modal(document.getElementById('addPatternModal'));
+        modal.show();
+    });
+    
+    document.getElementById('add-pattern-submit').addEventListener('click', function() {
+        const form = document.getElementById('add-pattern-form');
+        
+        // Validate form
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+        
+        // In a real implementation, you would save the pattern
+        alert('Attack pattern added successfully!');
+        
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('addPatternModal'));
+        modal.hide();
+    });
+    
+    // Handle confirmation for dangerous actions
+    document.getElementById('clear-old-logs-btn').addEventListener('click', function() {
+        document.getElementById('confirm-action-message').textContent = 
+            'Are you sure you want to clear all logs older than the retention period? This action cannot be undone.';
+        
+        document.getElementById('confirm-action-btn').onclick = function() {
+            // In a real implementation, you would call an API to clear old logs
+            alert('Old logs cleared successfully!');
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmActionModal'));
+            modal.hide();
+        };
+        
+        const modal = new bootstrap.Modal(document.getElementById('confirmActionModal'));
+        modal.show();
+    });
+    
+    document.getElementById('reset-all-logs-btn').addEventListener('click', function() {
+        document.getElementById('confirm-action-message').textContent = 
+            'Are you sure you want to reset ALL logs? This will delete all attack history and cannot be undone!';
+        
+        document.getElementById('confirm-action-btn').onclick = function() {
+            // In a real implementation, you would call an API to reset logs
+            alert('All logs have been reset!');
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmActionModal'));
+            modal.hide();
+        };
+        
+        const modal = new bootstrap.Modal(document.getElementById('confirmActionModal'));
+        modal.show();
+    });
+    
+    // Load attack patterns
+    function loadAttackPatterns() {
+        // In a real implementation, you would fetch patterns from the API
+        const patterns = [
+            {
+                name: "SQL Injection",
+                protocol: "TCP",
+                port: "80",
+                signature: "' OR 1=1",
+                severity: "high",
+                description: "SQL injection attempt trying to bypass authentication"
+            },
+            {
+                name: "XSS Attack",
+                protocol: "TCP",
+                port: "80",
+                signature: "<script>",
+                severity: "medium",
+                description: "Cross-site scripting attempt"
+            },
+            {
+                name: "Command Injection",
+                protocol: "TCP",
+                port: "80",
+                signature: "; cat /etc/passwd",
+                severity: "high",
+                description: "Command injection attempt to read passwd file"
+            },
+            {
+                name: "Path Traversal",
+                protocol: "TCP",
+                port: "80",
+                signature: "../../../",
+                severity: "medium",
+                description: "Directory traversal attempt"
+            },
+            {
+                name: "SSH Brute Force",
+                protocol: "TCP",
+                port: "22",
+                signature: "SSH-",
+                severity: "medium",
+                description: "SSH brute force attempt"
+            }
+        ];
+        
+        const tableBody = document.getElementById('attack-patterns-table');
+        
+        if (patterns.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="6" class="text-center">No attack patterns defined</td></tr>';
+            return;
+        }
+        
+        let html = '';
+        patterns.forEach((pattern, index) => {
+            // Map severity to badge color
+            let severityClass = '';
+            switch (pattern.severity) {
+                case 'critical':
+                    severityClass = 'bg-danger';
+                    break;
+                case 'high':
+                    severityClass = 'bg-warning text-dark';
+                    break;
+                case 'medium':
+                    severityClass = 'bg-info text-dark';
+                    break;
+                case 'low':
+                    severityClass = 'bg-secondary';
+                    break;
+            }
+            
+            html += `
+                <tr>
+                    <td>${pattern.name}</td>
+                    <td>${pattern.protocol}</td>
+                    <td>${pattern.port}</td>
+                    <td>${pattern.signature}</td>
+                    <td><span class="badge ${severityClass}">${pattern.severity}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-info view-pattern-btn" title="View Details" data-index="${index}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger delete-pattern-btn" title="Delete Pattern" data-index="${index}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        tableBody.innerHTML = html;
+    }
+    
+    // Load attack patterns on page load
+    loadAttackPatterns();
+});
+</script>
+{% endblock %}
